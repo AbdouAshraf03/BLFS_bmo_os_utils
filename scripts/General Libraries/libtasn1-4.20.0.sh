@@ -1,16 +1,6 @@
 
 #!/bin/bash
 
-
-
-if [ -z "$1" ]; then
-  echo "Usage: $0 <link>"
-  exit 1
-fi
-
-link="$1"
-   
-
 cd ~
 cd /sources/BLFS
 
@@ -21,18 +11,21 @@ folder_name=$(basename "$0" .sh)
 if [ -d "$folder_name" ]; then
     echo "✅ Folder '$folder_name' exists."
 else
-    . ./../instller.sh "$link"
+    . ./../instller.sh https://ftp.gnu.org/gnu/libtasn1/libtasn1-4.20.0.tar.gz
+    echo "✅ the package downloaded sucsuccessfully"
 
     # configure 
     ./configure --prefix=/usr --disable-static 
-
+    echo "✅ the package configured sucsuccessfully"
     # make it 
     make
-
+    echo "✅ the package maked sucsuccessfully"
     # install it 
     make install
-
+    echo "✅ the package installed sucsuccessfully"
     # If you did not pass the --enable-gtk-doc parameter to the configure script, you can install the API documentation using the following command as the root user:
     make -C doc/reference install-data-local
     
 fi
+
+echo "FINISHED :)"
