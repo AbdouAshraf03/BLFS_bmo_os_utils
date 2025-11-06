@@ -1,8 +1,10 @@
 
 #!/bin/bash
 
+set -e
+
 cd ~
-cd /sources/BLFS
+cd sources/BLFS
 
 # Get the script name without .sh extension
 folder_name=$(basename "$0" .sh)
@@ -11,9 +13,8 @@ folder_name=$(basename "$0" .sh)
 if [ -d "$folder_name" ]; then
     echo "✅ Folder '$folder_name' exists."
 else
-    . ./../instller.sh https://ftp.gnu.org/gnu/libtasn1/libtasn1-4.20.0.tar.gz
+    . ./../installer.sh https://ftp.gnu.org/gnu/libtasn1/libtasn1-4.20.0.tar.gz
     echo "✅ the package downloaded sucsuccessfully"
-
     # configure 
     ./configure --prefix=/usr --disable-static 
     echo "✅ the package configured sucsuccessfully"
