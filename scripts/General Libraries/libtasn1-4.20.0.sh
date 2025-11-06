@@ -10,7 +10,7 @@ if [ -d "$folder_name" ]; then
     echo "✅ Folder '$folder_name' exists."
     exit 1
 else
-    . ./sources/BLFS_bmo_os_utils/scripts/installer.sh https://ftp.gnu.org/gnu/libtasn1/libtasn1-4.20.0.tar.gz
+    . ./../BLFS_bmo_os_utils/scripts/installer.sh https://ftp.gnu.org/gnu/libtasn1/libtasn1-4.20.0.tar.gz
     echo "✅ the package downloaded successfully"
     
     ./configure --prefix=/usr --disable-static 
