@@ -36,3 +36,4 @@ else
     mv -v $XORG_PREFIX/share/doc/xorgproto{,-2024.1}
 
 fi
+echo "🎉 FINISHED :)"
