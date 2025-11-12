@@ -1,3 +1,7 @@
+#!/bin/bash
+# set -E
+# trap 'echo "❌ Error: command failed at line $LINENO"; exit 1' ERR
+
 cd ~/sources/BLFS || exit 1
 
 folder_name=$(basename "$0" .sh)
@@ -12,7 +16,7 @@ else
     . ./../BLFS_bmo_os_utils/scripts/installer.sh https://www.x.org/pub/individual/util/util-macros-1.20.2.tar.xz
     echo "✅ the package downloaded successfully"
 
-    <MORE_COMMAND_IF_EXISTS_WITH_IF_STATEMENT>
+    #<MORE_COMMAND_IF_EXISTS_WITH_IF_STATEMENT>
 
    echo "🔧 Running configure..."
     if ! ./configure $XORG_CONFIG; then
@@ -32,6 +36,7 @@ else
         exit 1
     fi
 
-    <ETC>
+    #<ETC>
 
 fi
+echo "🎉 FINISHED :)"
