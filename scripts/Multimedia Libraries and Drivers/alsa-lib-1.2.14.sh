@@ -31,7 +31,7 @@ elsez
         exit 1
     fi
 
-    make doc
+    
     
     echo "⚙️ installing..."
     if ! make install 
