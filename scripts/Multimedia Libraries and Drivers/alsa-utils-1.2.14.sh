@@ -1,3 +1,5 @@
+#!/bin/bash
+
 cd ~/sources/BLFS || exit 1
 
 folder_name=$(basename "$0" .sh)
@@ -44,7 +46,7 @@ else
     defaults.ctl.card 1
 
     # End /etc/asound.conf
-    EOF
+EOF
 
 fi
 
