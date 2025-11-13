@@ -18,7 +18,7 @@ jobs:
       - name: Set up build dependencies
         run: |
           sudo apt update
-          sudo apt install -y build-essential bash wget tar make timeout
+          sudo apt install -y build-essential bash wget tar make ninja-build
 
       - name: Get changed scripts
         id: changed_files
