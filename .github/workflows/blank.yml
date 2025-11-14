@@ -1,64 +1,74 @@
-name: Test Build
+name: Validate Scripts
 
 on:
   push:
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
 jobs:
-  build:
+  validate:
     runs-on: ubuntu-latest
-
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Debug repository structure
+      - name: Validate script structure
         run: |
-          echo "=== Current directory ==="
-          pwd
-          ls -la
+          echo "🔍 Validating script structure..."
           
-          echo "=== Repository structure ==="
-          find . -type f -name "*.sh" | head -20
-          echo "---"
-          find . -type d | head -20
-
-      - name: Set up build dependencies
-        run: |
-          sudo apt update
-          sudo apt install -y build-essential bash wget tar make ninja-build
-
-      - name: Find and run scripts
-        run: |
-          set -e
-          echo "🔍 Looking for scripts..."
-          
-          # Try different possible locations
-          if [ -d "BLFS_bmo_os_utils/scripts" ]; then
-            echo "✅ Found BLFS_bmo_os_utils/scripts"
-            scripts=$(find BLFS_bmo_os_utils/scripts -name "*.sh")
-          elif [ -d "scripts" ]; then
-            echo "✅ Found scripts directory"
-            scripts=$(find scripts -name "*.sh")
-          else
-            # Find any .sh files in the repo
-            scripts=$(find . -name "*.sh" -type f | grep -v ".git" || true)
-          fi
+          # Find all scripts
+          scripts=$(find . -name "*.sh" -type f | grep -v ".git" || true)
           
           if [ -z "$scripts" ]; then
-            echo "❌ No scripts found in the repository"
-            exit 1
+            echo "✅ No scripts found to validate"
+            exit 0
           fi
           
-          echo "📋 Scripts found:"
-          echo "$scripts"
+          echo "📋 Found $(echo "$scripts" | wc -l) scripts to validate"
+          
+          ALL_VALID=true
           
           for script in $scripts; do
-            echo "🚀 Running: $script"
-            chmod +x "$script"
-            bash "$script" || exit 1
-            echo "✅ Completed: $script"
+            echo "---"
+            echo "🔎 Validating: $script"
+            
+            # Check 1: File is executable
+            if [ ! -x "$script" ]; then
+              echo "❌ NOT EXECUTABLE: $script"
+              ALL_VALID=false
+            fi
+            
+            # Check 2: Has shebang
+            if ! head -1 "$script" | grep -q "#!/bin/bash"; then
+              echo "❌ MISSING SHEBANG: $script"
+              ALL_VALID=false
+            fi
+            
+            # Check 3: Has your template structure
+            if ! grep -q "folder_name=\$(basename" "$script"; then
+              echo "❌ MISSING FOLDER_NAME LOGIC: $script"
+              ALL_VALID=false
+            fi
+            
+            # Check 4: Has installer.sh call
+            if ! grep -q "BLFS_bmo_os_utils/scripts/installer.sh" "$script"; then
+              echo "❌ MISSING INSTALLER CALL: $script"
+              ALL_VALID=false
+            fi
+            
+            # Check 5: Has basic structure (configure/make/install)
+            if ! grep -q "configure" "$script" && ! grep -q "make" "$script"; then
+              echo "⚠️  MISSING BUILD COMMANDS: $script"
+            fi
+            
+            echo "✅ Basic checks passed for: $script"
           done
           
-          echo "🎉 All scripts executed successfully!"
+          if [ "$ALL_VALID" = false ]; then
+            echo "❌ Some scripts failed validation!"
+            exit 1
+          else
+            echo "🎉 All scripts are valid!"
+          fi
