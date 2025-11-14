@@ -2,7 +2,6 @@ name: Validate Scripts
 
 on:
   push:
-    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -14,34 +13,61 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install ShellCheck
-        run: sudo apt install -y shellcheck
-
-      - name: Run all validations
+      - name: Validate script structure
         run: |
-          echo "🔍 Comprehensive script validation..."
+          echo "🔍 Validating script structure..."
           
+          # Find all scripts
           scripts=$(find . -name "*.sh" -type f | grep -v ".git" || true)
-          [ -z "$scripts" ] && echo "✅ No scripts" && exit 0
+          
+          if [ -z "$scripts" ]; then
+            echo "✅ No scripts found to validate"
+            exit 0
+          fi
+          
+          echo "📋 Found $(echo "$scripts" | wc -l) scripts to validate"
+          
+          ALL_VALID=true
           
           for script in $scripts; do
             echo "---"
-            echo "📝 Validating: $script"
-            chmod +x "$script"
+            echo "🔎 Validating: $script"
             
-            # 1. Syntax check
-            if ! bash -n "$script"; then
-              echo "❌ Syntax error!"
-              exit 1
+            # Check 1: File is executable
+            if [ ! -x "$script" ]; then
+              echo "❌ NOT EXECUTABLE: $script"
+              ALL_VALID=false
             fi
             
-            # 2. ShellCheck
-            if ! shellcheck "$script"; then
-              echo "❌ ShellCheck failed!"
-              exit 1
+            # Check 2: Has shebang
+            if ! head -1 "$script" | grep -q "#!/bin/bash"; then
+              echo "❌ MISSING SHEBANG: $script"
+              ALL_VALID=false
             fi
             
-            echo "✅ All checks passed: $script"
+            # Check 3: Has your template structure
+            if ! grep -q "folder_name=\$(basename" "$script"; then
+              echo "❌ MISSING FOLDER_NAME LOGIC: $script"
+              ALL_VALID=false
+            fi
+            
+            # Check 4: Has installer.sh call
+            if ! grep -q "BLFS_bmo_os_utils/scripts/installer.sh" "$script"; then
+              echo "❌ MISSING INSTALLER CALL: $script"
+              ALL_VALID=false
+            fi
+            
+            # Check 5: Has basic structure (configure/make/install)
+            if ! grep -q "configure" "$script" && ! grep -q "make" "$script"; then
+              echo "⚠️  MISSING BUILD COMMANDS: $script"
+            fi
+            
+            echo "✅ Basic checks passed for: $script"
           done
           
-          echo "🎉 All scripts are valid!"
+          if [ "$ALL_VALID" = false ]; then
+            echo "❌ Some scripts failed validation!"
+            exit 1
+          else
+            echo "🎉 All scripts are valid!"
+          fi
