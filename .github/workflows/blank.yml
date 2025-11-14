@@ -2,7 +2,6 @@ name: Test Build
 
 on:
   push:
-    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -13,55 +12,53 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+
+      - name: Debug repository structure
+        run: |
+          echo "=== Current directory ==="
+          pwd
+          ls -la
+          
+          echo "=== Repository structure ==="
+          find . -type f -name "*.sh" | head -20
+          echo "---"
+          find . -type d | head -20
 
       - name: Set up build dependencies
         run: |
           sudo apt update
           sudo apt install -y build-essential bash wget tar make ninja-build
 
-      - name: Get changed scripts
-        id: changed_files
-        run: |
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            CHANGED=$(git diff --name-only origin/${{ github.base_ref }} HEAD | grep "^BLFS_bmo_os_utils/scripts/.*\.sh" || true)
-          else
-            CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} 2>/dev/null | grep "^BLFS_bmo_os_utils/scripts/.*\.sh" || true)
-            if [[ -z "$CHANGED" ]]; then
-              CHANGED=$(git diff --name-only HEAD~1 HEAD | grep "^BLFS_bmo_os_utils/scripts/.*\.sh" || true)
-            fi
-          fi
-          echo "changed=$CHANGED" >> $GITHUB_OUTPUT
-          echo "Changed scripts: $CHANGED"
-
-      - name: Stop if no scripts changed
-        if: steps.changed_files.outputs.changed == ''
-        run: |
-          echo "✔ No scripts changed. Skipping build."
-          exit 0
-
-      - name: Run changed build scripts safely
+      - name: Find and run scripts
         run: |
           set -e
-          FAILED_SCRIPTS=""
+          echo "🔍 Looking for scripts..."
           
-          for script in ${{ steps.changed_files.outputs.changed }}; do
-            if [[ -f "$script" && "$script" == BLFS_bmo_os_utils/scripts/* ]]; then
-              echo "🚀 Running: $script"
-              chmod +x "$script"
-              if timeout 30m bash "$script"; then
-                echo "✅ $script completed successfully"
-              else
-                echo "❌ $script failed"
-                FAILED_SCRIPTS="$FAILED_SCRIPTS $script"
-              fi
-            else
-              echo "⚠️  Skipping invalid script: $script"
-            fi
-          done
+          # Try different possible locations
+          if [ -d "BLFS_bmo_os_utils/scripts" ]; then
+            echo "✅ Found BLFS_bmo_os_utils/scripts"
+            scripts=$(find BLFS_bmo_os_utils/scripts -name "*.sh")
+          elif [ -d "scripts" ]; then
+            echo "✅ Found scripts directory"
+            scripts=$(find scripts -name "*.sh")
+          else
+            # Find any .sh files in the repo
+            scripts=$(find . -name "*.sh" -type f | grep -v ".git" || true)
+          fi
           
-          if [[ -n "$FAILED_SCRIPTS" ]]; then
-            echo "The following scripts failed: $FAILED_SCRIPTS"
+          if [ -z "$scripts" ]; then
+            echo "❌ No scripts found in the repository"
             exit 1
           fi
+          
+          echo "📋 Scripts found:"
+          echo "$scripts"
+          
+          for script in $scripts; do
+            echo "🚀 Running: $script"
+            chmod +x "$script"
+            bash "$script" || exit 1
+            echo "✅ Completed: $script"
+          done
+          
+          echo "🎉 All scripts executed successfully!"
