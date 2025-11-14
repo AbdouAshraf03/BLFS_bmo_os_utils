@@ -11,13 +11,17 @@ if [ -d "$folder_name" ]; then
     echo "✅ Folder '$folder_name' exists."
     exit 1
 else
-    . ./../BLFS_bmo_os_utils/scripts/installer.sh https://www.alsa-project.org/files/pub/plugins/alsa-plugins-1.2.12.tar.bz2
+    . ./../BLFS_bmo_os_utils/scripts/installer.sh https://github.com/unicode-org/icu/releases/download/release-77-1/icu4c-77_1-src.tgz
     echo "✅ the package downloaded successfully"
 
-   # <MORE_COMMAND_IF_EXISTS_WITH_IF_STATEMENT>
+    case $(uname -m) in
+    i?86) sed -e "s/U_PLATFORM_IS_LINUX_BASED/__X86_64__ \&\& &/" \
+            -i source/test/intltest/ustrtest.cpp ;;
+    esac
+    cd source
 
    echo "🔧 Running configure..."
-    if ! ./configure --sysconfdir=/etc; then
+    if ! ./configure --prefix=/usr; then
         echo "❌ Error: configure failed!"
         exit 1
     fi
@@ -29,7 +33,8 @@ else
     fi
     
     echo "⚙️ installing..."
-    if ! make install; then
+    if ! make install
+      ; then
         echo "❌ Error: make failed!"
         exit 1
     fi

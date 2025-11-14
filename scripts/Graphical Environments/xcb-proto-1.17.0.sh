@@ -11,22 +11,22 @@ if [ -d "$folder_name" ]; then
     echo "✅ Folder '$folder_name' exists."
     exit 1
 else
-    . ./../BLFS_bmo_os_utils/scripts/installer.sh https://www.alsa-project.org/files/pub/plugins/alsa-plugins-1.2.12.tar.bz2
+    . ./../BLFS_bmo_os_utils/scripts/installer.sh https://xorg.freedesktop.org/archive/individual/proto/xcb-proto-1.17.0.tar.xz
     echo "✅ the package downloaded successfully"
 
    # <MORE_COMMAND_IF_EXISTS_WITH_IF_STATEMENT>
 
    echo "🔧 Running configure..."
-    if ! ./configure --sysconfdir=/etc; then
+    if ! PYTHON=python3 ./configure $XORG_CONFIG; then
         echo "❌ Error: configure failed!"
         exit 1
     fi
 
-    echo "⚙️  Running make..."
-    if ! make; then
-        echo "❌ Error: make failed!"
-        exit 1
-    fi
+    # echo "⚙️  Running make..."
+    # if ! <MAKE>; then
+    #     echo "❌ Error: make failed!"
+    #     exit 1
+    # fi
     
     echo "⚙️ installing..."
     if ! make install; then
@@ -34,7 +34,7 @@ else
         exit 1
     fi
 
-   # <ETC>
+   
 
 fi
 

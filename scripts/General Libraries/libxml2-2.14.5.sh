@@ -11,13 +11,19 @@ if [ -d "$folder_name" ]; then
     echo "✅ Folder '$folder_name' exists."
     exit 1
 else
-    . ./../BLFS_bmo_os_utils/scripts/installer.sh https://www.alsa-project.org/files/pub/plugins/alsa-plugins-1.2.12.tar.bz2
+    wget https://www.w3.org/XML/Test/xmlts20130923.tar.gz --no-check-certificate
+    . ./../BLFS_bmo_os_utils/scripts/installer.sh https://download.gnome.org/sources/libxml2/2.14/libxml2-2.14.5.tar.xz
     echo "✅ the package downloaded successfully"
 
-   # <MORE_COMMAND_IF_EXISTS_WITH_IF_STATEMENT>
 
    echo "🔧 Running configure..."
-    if ! ./configure --sysconfdir=/etc; then
+    if ! ./configure --prefix=/usr     \
+            --sysconfdir=/etc \
+            --disable-static  \
+            --with-history    \
+            --with-icu        \
+            PYTHON=/usr/bin/python3 \
+            --docdir=/usr/share/doc/libxml2-2.14.5; then
         echo "❌ Error: configure failed!"
         exit 1
     fi
@@ -27,6 +33,8 @@ else
         echo "❌ Error: make failed!"
         exit 1
     fi
+    tar xf ../xmlts20130923.tar.gz
+    systemctl stop httpd.service
     
     echo "⚙️ installing..."
     if ! make install; then
@@ -34,7 +42,8 @@ else
         exit 1
     fi
 
-   # <ETC>
+    rm -vf /usr/lib/libxml2.la 
+    sed '/libs=/s/xml2.*/xml2"/' -i /usr/bin/xml2-config
 
 fi
 

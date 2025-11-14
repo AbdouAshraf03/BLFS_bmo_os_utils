@@ -11,13 +11,15 @@ if [ -d "$folder_name" ]; then
     echo "✅ Folder '$folder_name' exists."
     exit 1
 else
-    . ./../BLFS_bmo_os_utils/scripts/installer.sh https://www.alsa-project.org/files/pub/plugins/alsa-plugins-1.2.12.tar.bz2
+    . ./../BLFS_bmo_os_utils/scripts/installer.sh https://www.samba.org/ftp/linux-cifs/cifs-utils/cifs-utils-7.4.tar.bz2
     echo "✅ the package downloaded successfully"
-
-   # <MORE_COMMAND_IF_EXISTS_WITH_IF_STATEMENT>
+    
+    # <MORE_COMMAND_IF_EXISTS_WITH_IF_STATEMENT>
+    autoreconf -fiv
 
    echo "🔧 Running configure..."
-    if ! ./configure --sysconfdir=/etc; then
+    if ! ./configure --prefix=/usr \
+            --disable-pam ; then
         echo "❌ Error: configure failed!"
         exit 1
     fi

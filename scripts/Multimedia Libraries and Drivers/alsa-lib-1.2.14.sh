@@ -1,3 +1,6 @@
+#!/bin/bash
+
+
 cd ~/sources/BLFS || exit 1
 
 folder_name=$(basename "$0" .sh)
@@ -15,10 +18,6 @@ elsez
     . ./../BLFS_bmo_os_utils/scripts/installer.sh https://www.alsa-project.org/files/pub/lib/alsa-lib-1.2.14.tar.bz2
     echo "✅ the package downloaded successfully"
 
-   sed 's/playmidi1//' -i test/Makefile.am
-   autoreconf -fi
-
-
    echo "🔧 Running configure..."
     if ! ./configure; then
         echo "❌ Error: configure failed!"
@@ -35,11 +34,11 @@ elsez
     
     echo "⚙️ installing..."
     if ! make install 
-         tar -C /usr/share/alsa --strip-components=1 -xf ../alsa-ucm-conf-1.2.14.tar.bz2 ;then
+         ;then
         echo "❌ Error: make failed!"
         exit 1
     fi
-
+  tar -C /usr/share/alsa --strip-components=1 -xf ../alsa-ucm-conf-1.2.14.tar.bz2
   install -v -d -m755 /usr/share/doc/alsa-lib-1.2.14/html/search
   install -v -m644 doc/doxygen/html/*.* \
                 /usr/share/doc/alsa-lib-1.2.14/html 

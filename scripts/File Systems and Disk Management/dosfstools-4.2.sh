@@ -1,4 +1,6 @@
 #!/bin/bash
+# set -E
+# trap 'echo "❌ Error: command failed at line $LINENO"; exit 1' ERR
 
 cd ~/sources/BLFS || exit 1
 
@@ -11,13 +13,16 @@ if [ -d "$folder_name" ]; then
     echo "✅ Folder '$folder_name' exists."
     exit 1
 else
-    . ./../BLFS_bmo_os_utils/scripts/installer.sh https://www.alsa-project.org/files/pub/plugins/alsa-plugins-1.2.12.tar.bz2
+    . ./../BLFS_bmo_os_utils/scripts/installer.sh  https://github.com/dosfstools/dosfstools/releases/download/v4.2/dosfstools-4.2.tar.gz
     echo "✅ the package downloaded successfully"
 
-   # <MORE_COMMAND_IF_EXISTS_WITH_IF_STATEMENT>
+    
 
    echo "🔧 Running configure..."
-    if ! ./configure --sysconfdir=/etc; then
+    if ! ./configure --prefix=/usr            \
+            --enable-compat-symlinks \
+            --mandir=/usr/share/man  \
+            --docdir=/usr/share/doc/dosfstools-4.2 ; then
         echo "❌ Error: configure failed!"
         exit 1
     fi
@@ -34,9 +39,10 @@ else
         exit 1
     fi
 
-   # <ETC>
+    
 
 fi
 
 
 echo "🎉 FINISHED :)"
+

@@ -11,13 +11,18 @@ if [ -d "$folder_name" ]; then
     echo "✅ Folder '$folder_name' exists."
     exit 1
 else
-    . ./../BLFS_bmo_os_utils/scripts/installer.sh https://www.alsa-project.org/files/pub/plugins/alsa-plugins-1.2.12.tar.bz2
+    . ./../BLFS_bmo_os_utils/scripts/installer.sh https://github.com/NetworkConfiguration/dhcpcd/releases/download/v10.2.4/dhcpcd-10.2.4.tar.xz
     echo "✅ the package downloaded successfully"
 
    # <MORE_COMMAND_IF_EXISTS_WITH_IF_STATEMENT>
 
    echo "🔧 Running configure..."
-    if ! ./configure --sysconfdir=/etc; then
+    if ! ./configure --prefix=/usr                \
+            --sysconfdir=/etc            \
+            --libexecdir=/usr/lib/dhcpcd \
+            --dbdir=/var/lib/dhcpcd      \
+            --runstatedir=/run           \
+            --disable-privsep         ; then
         echo "❌ Error: configure failed!"
         exit 1
     fi
@@ -29,7 +34,10 @@ else
     fi
     
     echo "⚙️ installing..."
-    if ! make install; then
+    if ! 
+    make install
+    make install-dhcpcd
+    ; then
         echo "❌ Error: make failed!"
         exit 1
     fi

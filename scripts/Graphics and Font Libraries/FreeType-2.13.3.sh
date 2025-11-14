@@ -11,13 +11,19 @@ if [ -d "$folder_name" ]; then
     echo "✅ Folder '$folder_name' exists."
     exit 1
 else
-    . ./../BLFS_bmo_os_utils/scripts/installer.sh https://www.alsa-project.org/files/pub/plugins/alsa-plugins-1.2.12.tar.bz2
+     wget https://downloads.sourceforge.net/freetype/freetype-doc-2.13.3.tar.xz --no-check-certificate
+    . ./../BLFS_bmo_os_utils/scripts/installer.sh https://downloads.sourceforge.net/freetype/freetype-2.13.3.tar.xz
     echo "✅ the package downloaded successfully"
 
-   # <MORE_COMMAND_IF_EXISTS_WITH_IF_STATEMENT>
+tar -xf ../freetype-doc-2.13.3.tar.xz --strip-components=2 -C docs
+
+sed -ri "s:.*(AUX_MODULES.*valid):\1:" modules.cfg &&
+
+sed -r "s:.*(#.*SUBPIXEL_RENDERING) .*:\1:" \
+    -i include/freetype/config/ftoption.h 
 
    echo "🔧 Running configure..."
-    if ! ./configure --sysconfdir=/etc; then
+    if ! ./configure --prefix=/usr --enable-freetype-config --disable-static; then
         echo "❌ Error: configure failed!"
         exit 1
     fi
