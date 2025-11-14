@@ -30,7 +30,7 @@ elsez
         exit 1
     fi
 
-
+    
     
     echo "⚙️ installing..."
     if ! make install 
