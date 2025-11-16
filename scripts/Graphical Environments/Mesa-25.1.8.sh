@@ -34,18 +34,18 @@ else
     fi
 
     echo "⚙️  Running make..."
-    if ! <MAKE>; then
+    if ! ninja; then
         echo "❌ Error: make failed!"
         exit 1
     fi
     
     echo "⚙️ installing..."
-    if ! <MAKE_INSTALL>; then
+    if ! ninja install; then
         echo "❌ Error: make failed!"
         exit 1
     fi
 
-   # <ETC>
+   cp -rv ../docs -T /usr/share/doc/mesa-25.1.8
 
 fi
 
