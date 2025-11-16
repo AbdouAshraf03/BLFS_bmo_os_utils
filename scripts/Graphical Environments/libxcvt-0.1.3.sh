@@ -14,8 +14,8 @@ else
     . ./../BLFS_bmo_os_utils/scripts/installer.sh https://www.x.org/pub/individual/lib/libxcvt-0.1.3.tar.xz
     echo "✅ the package downloaded successfully"
 
-  mkdir build &&
-cd    build
+    mkdir build &&
+    cd    build
 
    echo "🔧 Running configure..."
     if ! meson setup --prefix=$XORG_PREFIX --buildtype=release ..; then
