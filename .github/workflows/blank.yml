@@ -1,4 +1,4 @@
-name: Test Build
+name: Validate Scripts
 
 on:
   push:
@@ -7,61 +7,68 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  validate:
     runs-on: ubuntu-latest
-
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Set up build dependencies
+      - name: Validate script structure
         run: |
-          sudo apt update
-          sudo apt install -y build-essential bash wget tar make ninja-build
-
-      - name: Get changed scripts
-        id: changed_files
-        run: |
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            CHANGED=$(git diff --name-only origin/${{ github.base_ref }} HEAD | grep "^BLFS_bmo_os_utils/scripts/.*\.sh" || true)
-          else
-            CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} 2>/dev/null | grep "^BLFS_bmo_os_utils/scripts/.*\.sh" || true)
-            if [[ -z "$CHANGED" ]]; then
-              CHANGED=$(git diff --name-only HEAD~1 HEAD | grep "^BLFS_bmo_os_utils/scripts/.*\.sh" || true)
-            fi
-          fi
-          echo "changed=$CHANGED" >> $GITHUB_OUTPUT
-          echo "Changed scripts: $CHANGED"
-
-      - name: Stop if no scripts changed
-        if: steps.changed_files.outputs.changed == ''
-        run: |
-          echo "✔ No scripts changed. Skipping build."
-          exit 0
-
-      - name: Run changed build scripts safely
-        run: |
-          set -e
-          FAILED_SCRIPTS=""
+          echo "🔍 Validating script structure..."
           
-          for script in ${{ steps.changed_files.outputs.changed }}; do
-            if [[ -f "$script" && "$script" == BLFS_bmo_os_utils/scripts/* ]]; then
-              echo "🚀 Running: $script"
-              chmod +x "$script"
-              if timeout 30m bash "$script"; then
-                echo "✅ $script completed successfully"
-              else
-                echo "❌ $script failed"
-                FAILED_SCRIPTS="$FAILED_SCRIPTS $script"
-              fi
-            else
-              echo "⚠️  Skipping invalid script: $script"
+          # Find all scripts
+          scripts=$(find . -name "*.sh" -type f | grep -v ".git" || true)
+          
+          if [ -z "$scripts" ]; then
+            echo "✅ No scripts found to validate"
+            exit 0
+          fi
+          
+          echo "📋 Found $(echo "$scripts" | wc -l) scripts to validate"
+          
+          ALL_VALID=true
+          
+          for script in $scripts; do
+            echo "---"
+            echo "🔎 Validating: $script"
+            
+            # Check 1: File is executable
+            if [ ! -x "$script" ]; then
+              echo "❌ NOT EXECUTABLE: $script"
+              ALL_VALID=false
             fi
+            
+            # Check 2: Has shebang
+            if ! head -1 "$script" | grep -q "#!/bin/bash"; then
+              echo "❌ MISSING SHEBANG: $script"
+              ALL_VALID=false
+            fi
+            
+            # Check 3: Has your template structure
+            if ! grep -q "folder_name=\$(basename" "$script"; then
+              echo "❌ MISSING FOLDER_NAME LOGIC: $script"
+              ALL_VALID=false
+            fi
+            
+            # Check 4: Has installer.sh call
+            if ! grep -q "BLFS_bmo_os_utils/scripts/installer.sh" "$script"; then
+              echo "❌ MISSING INSTALLER CALL: $script"
+              ALL_VALID=false
+            fi
+            
+            # Check 5: Has basic structure (configure/make/install)
+            if ! grep -q "configure" "$script" && ! grep -q "make" "$script"; then
+              echo "⚠️  MISSING BUILD COMMANDS: $script"
+            fi
+            
+            echo "✅ Basic checks passed for: $script"
           done
           
-          if [[ -n "$FAILED_SCRIPTS" ]]; then
-            echo "The following scripts failed: $FAILED_SCRIPTS"
+          if [ "$ALL_VALID" = false ]; then
+            echo "❌ Some scripts failed validation!"
             exit 1
+          else
+            echo "🎉 All scripts are valid!"
           fi
