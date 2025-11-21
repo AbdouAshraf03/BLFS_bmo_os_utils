@@ -42,6 +42,7 @@ else
    # <ETC>
    install -v -m755 -d          /usr/share/doc/rsync-3.4.1/api 
    install -v -m644 dox/html/*  /usr/share/doc/rsync-3.4.1/api
+   make install-rsyncd
 
 fi
 
