@@ -34,7 +34,7 @@ else
     echo "⚙️ installing..."
     if ! make install; then
         echo "❌ Error: make failed!"
-        exit 1nstal
+        exit 1
     fi
 
     install -v -m644 doc/Vorbis* /usr/share/doc/libvorbis-1.3.7
