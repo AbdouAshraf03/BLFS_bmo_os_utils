@@ -36,7 +36,7 @@ else
     echo "⚙️ installing Speex..."
     if ! make install; then
         echo "❌ Error: make Speex failed!"
-        exit 1nstal
+        exit 1
     fi
 
     cd ..                          
@@ -63,7 +63,7 @@ else
     echo "⚙️ installing speexdsp ..."
     if ! make install; then
         echo "❌ Error: make speexdsp  failed!"
-        exit 1nstal
+        exit 1
     fi          
 
 
