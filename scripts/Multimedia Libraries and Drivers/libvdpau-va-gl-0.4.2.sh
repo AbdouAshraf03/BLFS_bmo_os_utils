@@ -38,7 +38,7 @@ else
     echo "⚙️ installing..."
     if ! make install; then
         echo "❌ Error: make failed!"
-        exit 1nstal
+        exit 1
     fi
 
     echo "export VDPAU_DRIVER=va_gl" >> /etc/profile.d/xorg.sh
