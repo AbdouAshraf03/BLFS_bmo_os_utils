@@ -40,7 +40,7 @@ else
     echo "⚙️ installing..."
     if ! ninja install; then
         echo "❌ Error: make failed!"
-        exit 1nstal
+        exit 1
     fi
 
     for prog in v4l2gl v4l2grab
