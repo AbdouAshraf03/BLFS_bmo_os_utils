@@ -17,9 +17,11 @@ else
     . ./../BLFS_bmo_os_utils/scripts/installer.sh https://github.com/metabrainz/libmusicbrainz/releases/download/release-5.1.0/libmusicbrainz-5.1.0.tar.gz
     echo "✅ the package downloaded successfully"
 
-    patch -Np1 -i ../libmusicbrainz-5.1.0-cmake_fixes-1.patch
+    patch -Np1 -i ../libmusicbrainz-5.1.0-cmake_fixes-1.patch &&
+
     sed -e 's/xmlErrorPtr /const xmlError */'     \
-        -i src/xmlParser.cc
+        -i src/xmlParser.cc                        &&
+
     mkdir build 
     cd    build
 
@@ -32,7 +34,7 @@ else
     fi
 
     echo "⚙️  Running make..."
-    if ! make install; then
+    if ! make; then
         echo "❌ Error: make failed!"
         exit 1
     fi
