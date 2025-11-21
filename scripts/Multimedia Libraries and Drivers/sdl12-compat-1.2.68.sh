@@ -37,7 +37,7 @@ else
     echo "⚙️ installing..."
     if ! make install; then
         echo "❌ Error: make failed!"
-        exit 1nstal
+        exit 1
     fi
 
     rm -vf /usr/lib/libSDLmain.a
