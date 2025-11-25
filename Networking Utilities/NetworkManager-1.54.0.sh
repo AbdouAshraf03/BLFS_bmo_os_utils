@@ -57,6 +57,7 @@ else
         install -vm 644 $file /usr/share/man/man$section/
    done
    cp -Rv ../docs/{api,libnm} /usr/share/doc/NetworkManager-1.54.0
+   echo "There is missing config and Systemd Unit"
 
 fi
 
