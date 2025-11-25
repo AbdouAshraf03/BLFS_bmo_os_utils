@@ -17,14 +17,7 @@ else
    # <MORE_COMMAND_IF_EXISTS_WITH_IF_STATEMENT>
    patch -Np1 -i ../wireless_tools-29-fix_iwlist_scanning-1.patch
 
-   echo "🔧 Running configure..."
-    if ! [*] Networking support --->                                                [NET]
-    [*] Wireless --->                                                   [WIRELESS]
-        <*/M> cfg80211 - wireless configuration API                       [CFG80211]
-        [*]     cfg80211 wireless extensions compatibility           [CFG80211_WEXT]; then
-        echo "❌ Error: configure failed!"
-        exit 1
-    fi
+   
 
     echo "⚙️  Running make..."
     if ! make; then

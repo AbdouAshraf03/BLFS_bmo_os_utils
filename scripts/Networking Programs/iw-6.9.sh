@@ -16,18 +16,7 @@ else
 
    # <MORE_COMMAND_IF_EXISTS_WITH_IF_STATEMENT>
 
-   echo "🔧 Running configure..."
-    if ! [*] Networking support --->                                                [NET]
-  [*] Wireless --->                                                   [WIRELESS]
-    <*/M>   cfg80211 - wireless configuration API                     [CFG80211]
-    < /*/M>   Generic IEEE 802.11 Networking Stack (mac80211)         [MAC80211]
-
-Device Drivers --->
-  [*] Network device support --->                                   [NETDEVICES]
-    [*] Wireless LAN --->                                                 [WLAN]; then
-        echo "❌ Error: configure failed!"
-        exit 1
-    fi
+   
 
     sed -i "/INSTALL.*gz/s/.gz//" Makefile
 

@@ -15,7 +15,7 @@ else
     echo "✅ the package downloaded successfully"
 
    # <MORE_COMMAND_IF_EXISTS_WITH_IF_STATEMENT>
-    cat > wpa_supplicant/.config << "EOF"
+cat > wpa_supplicant/.config << "EOF"
 CONFIG_BACKEND=file
 CONFIG_CTRL_IFACE=y
 CONFIG_DEBUG_FILE=y
@@ -50,18 +50,7 @@ EOF
 cd wpa_supplicant
 
 
-   echo "🔧 Running configure..."
-    if ! [*] Networking support --->                                                [NET]
-    [*] Wireless --->                                                   [WIRELESS]
-        <*/M>   cfg80211 - wireless configuration API                     [CFG80211]
-        < /*/M>   Generic IEEE 802.11 Networking Stack (mac80211)         [MAC80211]
-
-    Device Drivers --->
-    [*] Network device support --->                                   [NETDEVICES]
-        [*] Wireless LAN --->                                                 [WLAN]; then
-        echo "❌ Error: configure failed!"
-        exit 1
-    fi
+   
 
     echo "⚙️  Running make..."
     if ! make BINDIR=/usr/sbin LIBDIR=/usr/lib; then
@@ -71,15 +60,15 @@ cd wpa_supplicant
     
 
    # <ETC>
-    install -v -m755 wpa_{cli,passphrase,supplicant} /usr/sbin/ 
-    install -v -m644 doc/docbook/wpa_supplicant.conf.5 /usr/share/man/man5/ 
-    install -v -m644 doc/docbook/wpa_{cli,passphrase,supplicant}.8 /usr/share/man/man8/
-    install -v -m644 systemd/*.service /usr/lib/systemd/system/
-    install -v -m644 dbus/fi.w1.wpa_supplicant1.service \
-                     /usr/share/dbus-1/system-services/ 
-    install -v -d -m755 /etc/dbus-1/system.d 
-    install -v -m644 dbus/dbus-wpa_supplicant.conf \
-                     /etc/dbus-1/system.d/wpa_supplicant.conf
+   install -v -m755 wpa_{cli,passphrase,supplicant} /usr/sbin/ 
+   install -v -m644 doc/docbook/wpa_supplicant.conf.5 /usr/share/man/man5/ 
+   install -v -m644 doc/docbook/wpa_{cli,passphrase,supplicant}.8 /usr/share/man/man8/
+   install -v -m644 systemd/*.service /usr/lib/systemd/system/
+   install -v -m644 dbus/fi.w1.wpa_supplicant1.service \
+                    /usr/share/dbus-1/system-services/ 
+   install -v -d -m755 /etc/dbus-1/system.d 
+   install -v -m644 dbus/dbus-wpa_supplicant.conf \
+                    /etc/dbus-1/system.d/wpa_supplicant.conf
 
 fi
 
