@@ -40,8 +40,6 @@ else
         exit 1
     fi
 
-   install -vm755 hw/vfb/Xvfb /usr/bin
-
 fi
 
 
