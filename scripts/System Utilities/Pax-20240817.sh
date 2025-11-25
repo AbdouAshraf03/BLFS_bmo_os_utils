@@ -13,23 +13,27 @@ if [ -d "$folder_name" ]; then
     echo "✅ Folder '$folder_name' exists."
     exit 1
 else
-    . ./../BLFS_bmo_os_utils/scripts/installer.sh https://www.rarlab.com/rar/unrarsrc-7.1.10.tar.gz
+    . ./../BLFS_bmo_os_utils/scripts/installer.sh http://www.mirbsd.org/MirOS/dist/mir/cpio/paxmirabilis-20240817.tgz
     echo "✅ the package downloaded successfully"
 
-
-    echo "⚙️  Running make..."
-    if ! make -f makefile; then
-        echo "❌ Error: make failed!"
-        exit 1
-    fi
     
-
-    echo "⚙️  Installing unrar binary to /usr/bin..."
-    if ! install -v -m755 unrar /usr/bin; then
+    echo "⚙️ installing..."
+    if ! bash Build.sh; then
         echo "❌ Error: installing failed!"
         exit 1
     fi
 
+        echo "⚙️ installing..."
+    if ! install -v pax /usr/bin ; then
+        echo "❌ Error: installing failed!"
+        exit 1
+    fi
+
+        echo "⚙️ installing..."
+    if ! install -v -m644 pax.1 /usr/share/man/man1; then
+        echo "❌ Error: installing failed!"
+        exit 1
+    fi
 
 fi
 
