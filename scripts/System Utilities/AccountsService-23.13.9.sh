@@ -59,7 +59,7 @@ else
     polkit.addAdminRule(function(action, subject) {
     return ["unix-group:adm"];
     });
-    EOF
+EOF
 
 fi
 
