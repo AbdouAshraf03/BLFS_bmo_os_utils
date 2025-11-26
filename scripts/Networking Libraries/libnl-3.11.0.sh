@@ -37,9 +37,6 @@ else
     fi
 
    # <ETC>
-   mkdir -vp /usr/share/doc/libnl-3.11.0 
-    tar -xf ../libnl-doc-3.11.0.tar.gz --strip-components=1 --no-same-owner \
-        -C  /usr/share/doc/libnl-3.11.0
 
 fi
 

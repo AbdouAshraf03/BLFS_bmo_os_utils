@@ -72,5 +72,5 @@ cd wpa_supplicant
 
 fi
 
-
+echo "Configuring wpa_supplicant"
 echo "🎉 FINISHED :)"

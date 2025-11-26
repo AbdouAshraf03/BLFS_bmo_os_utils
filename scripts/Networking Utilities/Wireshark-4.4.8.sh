@@ -11,6 +11,9 @@ if [ -d "$folder_name" ]; then
     echo "✅ Folder '$folder_name' exists."
     exit 1
 else
+
+    wget https://www.wireshark.org/download/docs/
+
     . ./../BLFS_bmo_os_utils/scripts/installer.sh https://www.wireshark.org/download/src/all-versions/wireshark-4.4.8.tar.xz
     echo "✅ the package downloaded successfully"
 
@@ -55,7 +58,7 @@ install -v -m644 <Downloaded_Files> \
                  /usr/share/doc/wireshark-4.4.8
 chown -v root:wireshark /usr/bin/tshark &&
 chmod -v 6550 /usr/bin/tshark
-usermod -a -G wireshark <username>
+usermod -a -G wireshark $(whoami)
 
 fi
 

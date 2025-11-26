@@ -70,5 +70,5 @@ else
 
 fi
 
-
+echo "Configuring Samba"
 echo "🎉 FINISHED :)"

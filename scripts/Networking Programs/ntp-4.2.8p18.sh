@@ -53,5 +53,5 @@ else
 
 fi
 
-
+echo "Configuring ntp"
 echo "🎉 FINISHED :)"

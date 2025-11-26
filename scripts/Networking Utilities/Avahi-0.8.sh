@@ -11,6 +11,9 @@ if [ -d "$folder_name" ]; then
     echo "✅ Folder '$folder_name' exists."
     exit 1
 else
+
+    wget https://www.linuxfromscratch.org/patches/blfs/12.4/avahi-0.8-ipv6_race_condition_fix-1.patch --no-check-certificate
+
     . ./../BLFS_bmo_os_utils/scripts/installer.sh https://github.com/lathiat/avahi/releases/download/v0.8/avahi-0.8.tar.gz
     echo "✅ the package downloaded successfully"
 
@@ -57,9 +60,8 @@ else
         exit 1
     fi
 
-   # <ETC>
-   echo "There is missing config"
+  
 fi
 
-
+echo "Configuring avahi"
 echo "🎉 FINISHED :)"

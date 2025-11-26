@@ -45,5 +45,5 @@ else
 
 fi
 
-
+echo "Configuring NFS Utilities"
 echo "🎉 FINISHED :)"

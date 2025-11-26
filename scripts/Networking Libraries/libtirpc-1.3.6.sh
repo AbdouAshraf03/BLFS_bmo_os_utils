@@ -11,6 +11,9 @@ if [ -d "$folder_name" ]; then
     echo "✅ Folder '$folder_name' exists."
     exit 1
 else
+
+    wget https://www.linuxfromscratch.org/patches/blfs/12.4/libtirpc-1.3.6-gcc15_fixes-1.patch --no-check-certificate
+
     . ./../BLFS_bmo_os_utils/scripts/installer.sh  https://downloads.sourceforge.net/libtirpc/libtirpc-1.3.6.tar.bz2
     echo "✅ the package downloaded successfully"
 
