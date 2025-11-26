@@ -45,21 +45,8 @@ else
         exit 1
     fi
 
-    install -vdm754 /etc/cron.{hourly,daily,weekly,monthly}
-
-    cat > /var/spool/fcron/systab.orig << "EOF"
-&bootrun 01 * * * * root run-parts /etc/cron.hourly
-&bootrun 02 4 * * * root run-parts /etc/cron.daily
-&bootrun 22 4 * * 0 root run-parts /etc/cron.weekly
-&bootrun 42 4 1 * * root run-parts /etc/cron.monthly
-EOF
-
-    systemctl enable fcron
-
-    systemctl start fcron &&
-    fcrontab -z -u systab
 
 fi
 
-
+echo "Configuring Fcron"
 echo "🎉 FINISHED :)"

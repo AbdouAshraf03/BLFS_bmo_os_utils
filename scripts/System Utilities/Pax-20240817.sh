@@ -16,12 +16,12 @@ else
     . ./../BLFS_bmo_os_utils/scripts/installer.sh http://www.mirbsd.org/MirOS/dist/mir/cpio/paxmirabilis-20240817.tgz
     echo "✅ the package downloaded successfully"
 
-    
-    echo "⚙️ installing..."
-    if ! bash Build.sh; then
-        echo "❌ Error: installing failed!"
-        exit 1
-    fi
+    bash Build.sh
+    # echo "⚙️ installing..."
+    # if ! bash Build.sh; then
+    #     echo "❌ Error: installing failed!"
+    #     exit 1
+    # fi
 
         echo "⚙️ installing..."
     if ! install -v pax /usr/bin ; then

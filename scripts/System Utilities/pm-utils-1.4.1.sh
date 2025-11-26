@@ -13,10 +13,13 @@ if [ -d "$folder_name" ]; then
     echo "✅ Folder '$folder_name' exists."
     exit 1
 else
+
+     wget https://www.linuxfromscratch.org/patches/blfs/12.4/pm-utils-1.4.1-bugfixes-1.patch --no-check-certificate  
+
     . ./../BLFS_bmo_os_utils/scripts/installer.sh https://pm-utils.freedesktop.org/releases/pm-utils-1.4.1.tar.gz
     echo "✅ the package downloaded successfully"
 
-    wget <https://www.linuxfromscratch.org/patches/blfs/12.4/pm-utils-1.4.1-bugfixes-1.patch --no-check-certificate  
+   
 
    patch -Np1 -i ../pm-utils-1.4.1-bugfixes-1.patch
    

@@ -53,6 +53,9 @@ else
     install -v -m644    doc/cpio.{html,txt} \
                         /usr/share/doc/cpio-2.15
 
+    install -v -m644 doc/cpio.{pdf,ps,dvi} \
+                 /usr/share/doc/cpio-2.15
+
 fi
 
 

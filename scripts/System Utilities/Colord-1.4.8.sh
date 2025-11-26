@@ -46,6 +46,16 @@ else
         exit 1
     fi
     
+    sed -e '/class="manual"/i<refmiscinfo class="source">colord</refmiscinfo>' \
+    -i ../man/*.xml &&
+    echo "⚙️ config and install..."
+    if !  meson configure -D man=true &&
+    ninja; then
+        echo "❌ Error: make failed!"
+        exit 1
+    fi
+   
+
     echo "⚙️ installing..."
     if ! ninja install; then
         echo "❌ Error: make failed!"

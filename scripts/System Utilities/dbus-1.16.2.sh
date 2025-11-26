@@ -73,12 +73,6 @@ echo "⚙️ testing..."
 </busconfig>
 EOF
 
-# Start the D-Bus session daemon
-eval `dbus-launch`
-export DBUS_SESSION_BUS_ADDRESS
-
-# Kill the D-Bus session daemon
-kill $DBUS_SESSION_BUS_PID
 
 fi
 

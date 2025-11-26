@@ -19,11 +19,7 @@ else
     sed -r '/INSTALL/{/PCI_IDS|update-pciids /d; s/update-pciids.8//}' \
     -i Makefile
 
-   echo "🔧 Running configure..."
-    if ! <CONFIG>; then
-        echo "❌ Error: configure failed!"
-        exit 1
-    fi
+
 
     echo "⚙️  Running make..."
     if ! make PREFIX=/usr                \

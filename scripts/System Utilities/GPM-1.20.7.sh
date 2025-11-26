@@ -13,11 +13,14 @@ if [ -d "$folder_name" ]; then
     echo "✅ Folder '$folder_name' exists."
     exit 1
 else
+
+    wget https://www.linuxfromscratch.org/patches/blfs/12.4/gpm-1.20.7-consolidated-1.patch --no-check-certificate 
+    wget https://www.linuxfromscratch.org/patches/blfs/12.4/gpm-1.20.7-gcc15_fixes-1.patch --no-check-certificate 
+
     . ./../BLFS_bmo_os_utils/scripts/installer.sh https://anduin.linuxfromscratch.org/BLFS/gpm/gpm-1.20.7.tar.bz2
     echo "✅ the package downloaded successfully"
 
-wget <https://www.linuxfromscratch.org/patches/blfs/12.4/gpm-1.20.7-consolidated-1.patch> --no-check-certificate 
-wget <https://www.linuxfromscratch.org/patches/blfs/12.4/gpm-1.20.7-gcc15_fixes-1.patch> --no-check-certificate 
+
    
     patch -Np1 -i ../gpm-1.20.7-consolidated-1.patch                &&
     patch -Np1 -i ../gpm-1.20.7-gcc15_fixes-1.patch                 &&
@@ -54,18 +57,14 @@ wget <https://www.linuxfromscratch.org/patches/blfs/12.4/gpm-1.20.7-gcc15_fixes-
     install -v -m644    doc/{FAQ,HACK_GPM,README*}        \
                         /usr/share/doc/gpm-1.20.7
 
-    echo "⚙️ installing..."
-    if ! make install-gpm ; then
-        echo "❌ Error: make failed!"
-        exit 1
-    fi 
+
 
     install -v -dm755 /etc/systemd/system/gpm.service.d
-     
+    make install-gpm
     cat > /etc/systemd/system/gpm.service.d/99-user.conf << EOF
     [Service]
     ExecStart=/usr/sbin/gpm <list of parameters>
-    EOF                   
+EOF                   
 
 fi
 
