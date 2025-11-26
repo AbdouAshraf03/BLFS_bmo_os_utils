@@ -1,0 +1,49 @@
+#!/bin/bash
+
+cd ~/sources/BLFS || exit 1
+
+folder_name=$(basename "$0" .sh)
+
+# Convert to lowercase
+folder_name=$(echo "$folder_name" | tr '[:upper:]' '[:lower:]')
+
+if [ -d "$folder_name" ]; then
+    echo "✅ Folder '$folder_name' exists."
+    exit 1
+else
+    . ./../BLFS_bmo_os_utils/scripts/installer.sh  https://nmap.org/dist/nmap-7.98.tar.bz2
+    echo "✅ the package downloaded successfully"
+
+   # <MORE_COMMAND_IF_EXISTS_WITH_IF_STATEMENT>
+   sed -ri Makefile.in \
+    -e 's#-m build#& --no-isolation#'  \
+    -e '/pip install/s#(ZENMAP|NDIFF)DIR\)/#&dist/*.whl#'
+   sed 's/, "setuptools-gettext"//' -i zenmap/pyproject.toml
+
+   echo "🔧 Running configure..."
+    if ! ./configure --prefix=/usr; then
+        echo "❌ Error: configure failed!"
+        exit 1
+    fi
+
+    echo "⚙️  Running make..."
+    if ! make; then
+        echo "❌ Error: make failed!"
+        exit 1
+    fi
+    sed -e '/import imp/d'                \
+    -e 's/^ndiff = .*$/import ndiff/' \
+    -i ndiff/ndifftest.py
+    
+    echo "⚙️ installing..."
+    if ! make install; then
+        echo "❌ Error: make failed!"
+        exit 1
+    fi
+
+   # <ETC>
+
+fi
+
+
+echo "🎉 FINISHED :)"
