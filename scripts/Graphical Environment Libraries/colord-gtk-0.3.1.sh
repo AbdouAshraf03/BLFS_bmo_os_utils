@@ -30,7 +30,7 @@ else
     fi
 
      echo "⚙️  Running make..."
-    if ! ninja; then
+    if ! ninja -j1; then
         echo "❌ Error: make failed!"
         exit 1
     fi

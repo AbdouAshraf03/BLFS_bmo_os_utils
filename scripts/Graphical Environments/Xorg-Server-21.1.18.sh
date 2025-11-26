@@ -37,7 +37,7 @@ else
     fi
     
     echo "⚙️ installing..."
-    if ! ninja install>; then
+    if ! ninja install; then
         echo "❌ Error: make failed!"
         exit 1
     fi

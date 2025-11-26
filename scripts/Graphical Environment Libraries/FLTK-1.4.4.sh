@@ -36,19 +36,7 @@ else
     fi
 
     rm -vf /usr/lib/libfltk*.a
-
-     echo "⚙️  Running make..."
-    if !make -C test          docdir=/usr/share/doc/fltk-1.4.4 install-linux ; then
-        echo "❌ Error: make failed!"
-        exit 1
-    fi
-
-    echo "⚙️  Running make..."
-    if !make -C documentation docdir=/usr/share/doc/fltk-1.4.4 install-linux ; then
-        echo "❌ Error: make failed!"
-        exit 1
-    fi
-
+q
     tar -C /usr/share/doc/fltk-1.4.4 --strip-components=4 -xf ../fltk-1.4.4-docs-html.tar.gz
 
 fi

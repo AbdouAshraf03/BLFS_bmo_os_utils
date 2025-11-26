@@ -11,7 +11,7 @@ if [ -d "$folder_name" ]; then
     echo "✅ Folder '$folder_name' exists."
     exit 1
 else
-    . ./../BLFS_bmo_os_utils/scripts/installer.sh <LINK>
+    . ./../BLFS_bmo_os_utils/scripts/installer.sh https://archive.mesa3d.org/glu/glu-9.0.3.tar.xz
     echo "✅ the package downloaded successfully"
 
    mkdir build &&
